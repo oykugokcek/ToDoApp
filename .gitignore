@@ -1,0 +1,33 @@
+# Compiled Object files, Static and Dynamic libs (So files)
+*.o
+*.a
+*.so
+
+# Folders
+_obj/
+_test/
+
+# Output files
+*.exe
+*.test
+*.prof
+
+# Log files
+*.log
+
+# Binary files (images, executables, compressed files, etc.)
+*.bin
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pdf
+*.zip
+*.gz
+*.tar.gz
+*.tar
+*.rar
+
+# Go specific
+*.test
+*.prof
