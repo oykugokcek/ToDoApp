@@ -8,6 +8,23 @@ import (
 )
 
 // Create a user
+func GetAllUsers(c *fiber.Ctx) error {
+	db := database.DB.Db
+	var users []model.User
+
+	// find all users in the database
+	db.Find(&users)
+
+	// If no user found, return an error
+	if len(users) == 0 {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Users not found", "data": nil})
+	}
+
+	// return users
+	return c.Status(200).JSON(fiber.Map{"status": "sucess", "message": "Users Found", "data": users})
+}
+
+// Create a user
 func CreateUser(c *fiber.Ctx) error {
 	db := database.DB.Db
 	user := new(model.User)
@@ -22,20 +39,6 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 	// Return the created user
 	return c.Status(201).JSON(fiber.Map{"status": "success", "message": "User has created", "data": user})
-}
-
-// Get All Users from db
-func GetAllUsers(c *fiber.Ctx) error {
-	db := database.DB.Db
-	var users []model.User
-	// find all users in the database
-	db.Find(&users)
-	// If no user found, return an error
-	if len(users) == 0 {
-		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Users not found", "data": nil})
-	}
-	// return users
-	return c.Status(200).JSON(fiber.Map{"status": "sucess", "message": "Users Found", "data": users})
 }
 
 // GetSingleUser from db

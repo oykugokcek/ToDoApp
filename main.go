@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5"
 	"github.com/oykugokcek/ToDoApp/database"
 	"github.com/oykugokcek/ToDoApp/router"
 )
@@ -19,5 +19,5 @@ func main() {
 	app.Use(func(c *fiber.Ctx) error {
 		return c.SendStatus(404) // => 404 "Not Found"
 	})
-	app.Listen(":8080")
+	app.Listen(":9000")
 }
