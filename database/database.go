@@ -39,7 +39,9 @@ func Connect() {
 	log.Println("Connected")
 	db.Logger = logger.Default.LogMode(logger.Info)
 	log.Println("running migrations")
-	db.AutoMigrate(&models.User{})
+
+	// Auto-migrate both User and Todo models
+	db.AutoMigrate(&models.User{}, &models.Todo{})
 	DB = Dbinstance{
 		Db: db,
 	}
