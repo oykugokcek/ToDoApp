@@ -26,12 +26,12 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	// // check for uniqueness
-	// if err := middleware.UniqueUsernameEmail()(c); err != nil {
-	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-	// 		"message": "XX",
-	// 	})
-	// }
+	// check for uniqueness
+	if err := middleware.UniqueUsernameEmail()(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "XX",
+		})
+	}
 
 	// Validate email, username, and password
 	if !middleware.ValidateEmail(data["email"]) {

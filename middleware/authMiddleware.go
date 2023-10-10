@@ -3,6 +3,8 @@ package middleware
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/oykugokcek/ToDoApp/database"
+	"github.com/oykugokcek/ToDoApp/model"
 )
 
 var Validator = validator.New()
@@ -81,30 +83,30 @@ func PasswordValidationMiddleware() func(*fiber.Ctx) error {
 	}
 }
 
-// func UniqueUsernameEmail() func(*fiber.Ctx) error {
-// 	return func(c *fiber.Ctx) error {
-// 		// Parse request body to get username and email
-// 		var data map[string]string
-// 		if err := c.BodyParser(&data); err != nil {
-// 			return fiber.ErrBadRequest
-// 		}
+func UniqueUsernameEmail() func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		// Parse request body to get username and email
+		var data map[string]string
+		if err := c.BodyParser(&data); err != nil {
+			return fiber.ErrBadRequest
+		}
 
-// 		// Check if username is unique
-// 		existingUser := database.DB.Db.Where("username = ?", data["username"]).First(&model.User{})
-// 		if existingUser.RowsAffected != 0 {
-// 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
-// 				"message": "Username already exists",
-// 			})
-// 		}
+		// Check if username is unique
+		existingUser := database.DB.Db.Where("username = ?", data["username"]).First(&model.User{})
+		if existingUser.RowsAffected != 0 {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+				"message": "Username already exists",
+			})
+		}
 
-// 		// Check if email is unique
-// 		existingUser = database.DB.Db.Where("email = ?", data["email"]).First(&model.User{})
-// 		if existingUser.RowsAffected != 0 {
-// 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
-// 				"message": "Email already exists",
-// 			})
-// 		}
+		// Check if email is unique
+		existingUser = database.DB.Db.Where("email = ?", data["email"]).First(&model.User{})
+		if existingUser.RowsAffected != 0 {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+				"message": "Email already exists",
+			})
+		}
 
-// 		return c.Next()
-// 	}
-// }
+		return c.Next()
+	}
+}
