@@ -13,6 +13,7 @@ import (
 
 const SecretKey = "somethingsecret"
 
+// register handler
 func Register(c *fiber.Ctx) error {
 	var data map[string]string
 
@@ -40,6 +41,7 @@ func Register(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
+// Login handler
 func Login(c *fiber.Ctx) error {
 	var data map[string]string
 
@@ -49,8 +51,10 @@ func Login(c *fiber.Ctx) error {
 
 	var user model.User
 
+	// Find the user by email
 	database.DB.Db.Where("email = ?", data["email"]).First(&user)
 
+	// Check if the user was found
 	if user.ID == uuid.Nil {
 		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
@@ -58,6 +62,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	// Compare the provided password with the stored password hash
 	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
@@ -65,11 +70,13 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	// Create a JWT token for the user
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Issuer:    user.ID.String(),                      // Convert UUID to string
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // 1 day
 	})
 
+	// Sign the JWT token
 	token, err := claims.SignedString([]byte(SecretKey))
 
 	if err != nil {
@@ -79,10 +86,28 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	// Set the JWT token as a cookie
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    token,
 		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
+}
+
+// Logout
+func Logout(c *fiber.Ctx) error {
+	// Clears the user's session cookie
+	cookie := fiber.Cookie{
+		Name:     "jwt",
+		Value:    "",
+		Expires:  time.Now().Add(-time.Hour),
 		HTTPOnly: true,
 	}
 
