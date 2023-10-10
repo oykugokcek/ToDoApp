@@ -6,21 +6,50 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/oykugokcek/ToDoApp/config"
 	"github.com/oykugokcek/ToDoApp/database"
+	"github.com/oykugokcek/ToDoApp/middleware"
 	"github.com/oykugokcek/ToDoApp/model"
 	"golang.org/x/crypto/bcrypt"
 )
 
-const SecretKey = "somethingsecret"
+var SecretKey = config.Config("SECRET_KEY")
 
 // register handler
 func Register(c *fiber.Ctx) error {
 	var data map[string]string
 
-	err := c.BodyParser(&data)
+	// Parse the request body into 'data' map
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad Request",
+		})
+	}
 
-	if err != nil {
-		return err
+	// // check for uniqueness
+	// if err := middleware.UniqueUsernameEmail()(c); err != nil {
+	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// 		"message": "XX",
+	// 	})
+	// }
+
+	// Validate email, username, and password
+	if !middleware.ValidateEmail(data["email"]) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid email address.",
+		})
+	}
+
+	if !middleware.ValidateUsername(data["username"]) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid username. Username must be alphanumeric and have a length between 3 and 20 characters.",
+		})
+	}
+
+	if !middleware.ValidatePassword(data["password"]) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid password. Password must be at least 8 characters long.",
+		})
 	}
 
 	// Generate a new UUID
