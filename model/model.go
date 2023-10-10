@@ -10,8 +10,8 @@ type User struct {
 	gorm.Model
 	ID       uuid.UUID `gorm:"type:uuid;"`
 	Username string    `json:"username"`
-	Email    string    `json:"email"` //unique
-	Password []byte    `json:"password"`
+	Email    string    `json:"email" gorm:"unique"`
+	Password []byte    `json:"-"`
 }
 
 // Users struct
