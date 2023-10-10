@@ -9,7 +9,7 @@ import (
 	"github.com/oykugokcek/ToDoApp/config"
 	"github.com/oykugokcek/ToDoApp/database"
 	"github.com/oykugokcek/ToDoApp/middleware"
-	"github.com/oykugokcek/ToDoApp/model"
+	"github.com/oykugokcek/ToDoApp/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -57,7 +57,7 @@ func Register(c *fiber.Ctx) error {
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
-	user := model.User{
+	user := models.User{
 		ID:       userID, // Set the generated UUID
 		Username: data["username"],
 		Email:    data["email"],
@@ -78,7 +78,7 @@ func Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	var user model.User
+	var user models.User
 
 	// Find the user by email
 	database.DB.Db.Where("email = ?", data["email"]).First(&user)

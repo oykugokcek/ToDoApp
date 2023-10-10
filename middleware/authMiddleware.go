@@ -4,7 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/oykugokcek/ToDoApp/database"
-	"github.com/oykugokcek/ToDoApp/model"
+	"github.com/oykugokcek/ToDoApp/models"
 )
 
 var Validator = validator.New()
@@ -92,7 +92,7 @@ func UniqueUsernameEmail() func(*fiber.Ctx) error {
 		}
 
 		// Check if username is unique
-		existingUser := database.DB.Db.Where("username = ?", data["username"]).First(&model.User{})
+		existingUser := database.DB.Db.Where("username = ?", data["username"]).First(&models.User{})
 		if existingUser.RowsAffected != 0 {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 				"message": "Username already exists",
@@ -100,7 +100,7 @@ func UniqueUsernameEmail() func(*fiber.Ctx) error {
 		}
 
 		// Check if email is unique
-		existingUser = database.DB.Db.Where("email = ?", data["email"]).First(&model.User{})
+		existingUser = database.DB.Db.Where("email = ?", data["email"]).First(&models.User{})
 		if existingUser.RowsAffected != 0 {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 				"message": "Email already exists",

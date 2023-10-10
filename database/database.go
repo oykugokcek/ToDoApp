@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/oykugokcek/ToDoApp/config"
-	"github.com/oykugokcek/ToDoApp/model"
+	"github.com/oykugokcek/ToDoApp/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -39,7 +39,7 @@ func Connect() {
 	log.Println("Connected")
 	db.Logger = logger.Default.LogMode(logger.Info)
 	log.Println("running migrations")
-	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&models.User{})
 	DB = Dbinstance{
 		Db: db,
 	}

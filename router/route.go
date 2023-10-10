@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/oykugokcek/ToDoApp/controllers"
-	"github.com/oykugokcek/ToDoApp/handler"
+	"github.com/oykugokcek/ToDoApp/handlers"
 )
 
 // SetupRoutes func
@@ -16,11 +16,12 @@ func SetupRoutes(app *fiber.App) {
 	auth.Post("/login", controllers.Login)
 	auth.Post("/logout", controllers.Logout)
 
-	v1 := api.Group("/user")
-	v1.Get("/", handler.GetAllUsers)
-	v1.Post("/", handler.CreateUser)
-	v1.Get("/:id", handler.GetSingleUser)
-	v1.Put("/:id", handler.UpdateUser)
-	v1.Delete("/:id", handler.DeleteUserByID)
+	user := api.Group("/user")
+
+	user.Get("/", handlers.GetAllUsers)
+	user.Post("/", handlers.CreateUser)
+	user.Get("/:id", handlers.GetSingleUser)
+	user.Put("/:id", handlers.UpdateUser)
+	user.Delete("/:id", handlers.DeleteUserByID)
 
 }

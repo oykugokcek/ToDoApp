@@ -1,16 +1,16 @@
-package handler
+package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/oykugokcek/ToDoApp/database"
-	"github.com/oykugokcek/ToDoApp/model"
+	"github.com/oykugokcek/ToDoApp/models"
 )
 
 // Create a user
 func GetAllUsers(c *fiber.Ctx) error {
 	db := database.DB.Db
-	var users []model.User
+	var users []models.User
 
 	// find all users in the database
 	db.Find(&users)
@@ -27,7 +27,7 @@ func GetAllUsers(c *fiber.Ctx) error {
 // Create a user
 func CreateUser(c *fiber.Ctx) error {
 	db := database.DB.Db
-	user := new(model.User)
+	user := new(models.User)
 	// Store the body in the user and return error if encountered
 	err := c.BodyParser(user)
 	if err != nil {
@@ -46,7 +46,7 @@ func GetSingleUser(c *fiber.Ctx) error {
 	db := database.DB.Db
 	// get id params
 	id := c.Params("id")
-	var user model.User
+	var user models.User
 	// find single user in the database by id
 	db.Find(&user, "id = ?", id)
 	if user.ID == uuid.Nil {
@@ -61,7 +61,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		Username string `json:"username"`
 	}
 	db := database.DB.Db
-	var user model.User
+	var user models.User
 	// get id params
 	id := c.Params("id")
 	// find single user in the database by id
@@ -84,7 +84,7 @@ func UpdateUser(c *fiber.Ctx) error {
 // delete user in db by ID
 func DeleteUserByID(c *fiber.Ctx) error {
 	db := database.DB.Db
-	var user model.User
+	var user models.User
 	// get id params
 	id := c.Params("id")
 	// find single user in the database by id
